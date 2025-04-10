@@ -12,28 +12,56 @@ $(document).ready(function() {
         });
     });
 
-    // Validación del formulario
-    $('#contactForm').on('submit', function(event) {
-        event.preventDefault();
-        
-        if (!this.checkValidity()) {
-            event.stopPropagation();
-            $(this).addClass('was-validated');
-            return;
-        }
+    // Validación del formulario y envío a WhatsApp
+    $(document).ready(function () {
+        $('#contactForm').on('submit', function(event) {
+            event.preventDefault();
+    
+            const form = this;
+    
+            // Validación del formulario
+            if (!form.checkValidity()) {
+                event.stopPropagation();
+                $(form).addClass('was-validated');
+                return;
+            }
+    
+            // Obtener los datos
+            const nombre = $('#nombre').val().trim();
+            const email = $('#email').val().trim();
+            const mensaje = $('#mensaje').val().trim();
+    
+            // Validar manualmente por si acaso
+            if (!nombre || !email || !mensaje) {
+                alert('Por favor completa todos los campos.');
+                return;
+            }
+    
+            // Número de WhatsApp
+            const numeroWhatsApp = '573136489832';
+    
+            // Crear mensaje
+            const mensajeWhatsApp = `*Nuevo mensaje de contacto*\n\n` +
+                                    `*Nombre:* ${nombre}\n` +
+                                    `*Email:* ${email}\n` +
+                                    `*Mensaje:* ${mensaje}`;
+    
+            const mensajeCodificado = encodeURIComponent(mensajeWhatsApp);
+            const urlWhatsApp = `https://api.whatsapp.com/send?phone=${numeroWhatsApp}&text=${mensajeCodificado}`;
 
-        // Aquí puedes agregar la lógica para enviar el formulario
-        var formData = {
-            nombre: $('#nombre').val(),
-            email: $('#email').val(),
-            mensaje: $('#mensaje').val()
+             
+            alert('¡Gracias por tu mensaje! Serás redirigido a WhatsApp.');
             
-        };
 
-        // Simulación de envío exitoso
-        alert('¡Gracias por tu mensaje! Te contactaré pronto.');
-        this.reset();
-        $(this).removeClass('was-validated');
+            // Abrir WhatsApp
+             window.open(urlWhatsApp, '_blank');
+
+              // Limpiar formulario
+            form.reset();
+            $(form).removeClass('was-validated');
+    
+           
+        });
     });
 
     // Animación suave del scroll
